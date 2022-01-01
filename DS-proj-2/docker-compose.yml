@@ -1,0 +1,150 @@
+version: '2'
+services:
+  pub1:
+    build: ./pub1 
+    links:
+      - "kafka-1"
+      - "kafka-2"
+      - "kafka-3"
+    container_name: publisher1
+    ports:
+      - "3000:3000"
+  pub2:
+    build: ./pub2
+    container_name: publisher2
+    ports:
+      - "3001:3001"
+    links:
+      - "kafka-1"
+      - "kafka-2"
+      - "kafka-3"
+  pub3:
+    build: ./pub3
+    container_name: publisher3
+    ports:
+      - "3002:3002"
+    links:
+      - "kafka-1"
+      - "kafka-2"
+      - "kafka-3"
+  subscriber1:
+    build: ./subscriber1 
+    container_name: subscriber-1
+    ports:
+      - "4000:4000"
+  subscriber2:
+    build: ./subscriber2
+    container_name: subscriber-2
+    ports:
+      - "4001:4001"
+  subscriber3:
+    build: ./subscriber3
+    container_name: subscriber-3
+    ports:
+      - "4002:4002"
+  subscriber4:
+    build: ./subscriber4
+    container_name: subscriber-4
+    ports:
+      - "4003:4003"
+  subscriber5:
+    build: ./subscriber5
+    container_name: subscriber-5
+    ports:
+      - "4004:4004"
+  subscriber6:
+    build: ./subscriber6
+    container_name: subscriber-6
+    ports:
+      - "4005:4005"
+  subscriber7:
+    build: ./subscriber7
+    container_name: subscriber-7
+    ports:
+      - "4006:4006"
+  subscriber8:
+    build: ./subscriber8
+    container_name: subscriber-8
+    ports:
+      - "4007:4007"
+  subscriber9:
+    build: ./subscriber9
+    container_name: subscriber-9
+    ports:
+      - "4008:4008"
+  subscriber10:
+    build: ./subscriber10
+    container_name: subscriber-10
+    ports:
+      - "4009:4009"
+
+  topic-handler:
+    build: ./topicHandler
+    container_name: topichandler
+    ports:
+      - "3050:3050"
+    depends_on:
+      - "kafka-1"
+      - "kafka-2"
+      - "kafka-3"
+
+  zookeeper-1:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      # - zookeeper-2
+      # - zookeeper-3
+
+    ports:
+      - 19092:19092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181      
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      # - zookeeper-2
+      # - zookeeper-3
+
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper-1
+      # - zookeeper-2
+      # - zookeeper-3
+
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    
+  
